@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fort St. James - BC Emissions</title>
+	<link rel="icon" type="image/png" href="../../../files/img/favicon.png" /><meta charset="utf-8" />
+	<link rel="stylesheet" href="../../../files/css/theme.css" type="text/css" /> 
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../files/js/tools.js"></script>
+	
+<script type="text/javascript" src="../../../files/js/raphael-min.js"></script>
+<script type="text/javascript" src="../../../files/js/g.raphael-min.js"></script>
+<script type="text/javascript" src="../../../files/js/g.pie.js"></script>
+<script type="text/javascript" src="../../../files/js/g.bar.js"></script>
+<script type="text/javascript" src="../../../files/js/excanvas.min.js"></script>
+<script type="text/javascript" src="../../../files/js/jquery.flot.min.js"></script>
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=false">
+</script>
+<script type="text/javascript" src="../../../files/js/ringcaption.js"></script>
+<script type="text/javascript">
+	var sc = [54.442905000,-124.250777000];
+	var commute_modes = [
+	
+	{year:1996, other:10, driver:790, motorcycle:0, 
+		taxicab:0, passenger:80, transit:0, walk:150,
+		bike:25, total_commuters:1055 },
+	
+	{year:2001, other:0, driver:760, motorcycle:0, 
+		taxicab:10, passenger:105, transit:0, walk:90,
+		bike:0, total_commuters:965 },
+	
+	{year:2006, other:10, driver:510, motorcycle:0, 
+		taxicab:0, passenger:55, transit:0, walk:70,
+		bike:10, total_commuters:655 }
+	
+	];
+
+	var commute_distances = [
+	];
+
+	var housing_types = [
+    
+    {year:1996, single: 455, semi:10,
+        row:45, duplex:10, lt5:125, 
+        gte5:0, other:0, moveable:65 },
+    
+    {year:2001, single: 450, semi:20,
+        row:55, duplex:10, lt5:105, 
+        gte5:0, other:5, moveable:80 },
+    
+    {year:2006, single: 395, semi:5,
+        row:25, duplex:5, lt5:85, 
+        gte5:0, other:5, moveable:25 }
+    ];
+
+	var landuse = [1322,2409.96,2245.39,
+	           	0.00,0.00,
+	           	6.55,20.71,137.31];
+
+   	var airquality_o3 = [
+   	];
+   	var airquality_pm = [
+    ];
+
+    var trash = [1872, 1703];
+
+    var he = {electricity:[[7838820,193],
+          [13181934,325],
+          [0,0],
+          [0,0]], 
+   gas:[[43708,2229],
+           [40000,2040],
+           [296814,15138],
+           [0,0]],
+   wood:[[17804,7],
+            [0,0],
+            [0,0],
+            [0,0]], 
+   oil:[[2400,169],
+           [0,0],
+           [0,0],
+           [0,0]], 
+   propane:[[6520,398],
+         [0,0],
+         [0,0],
+         [0,0]]};
+</script>
+<script type="text/javascript" src="../../../files/js/heating_electricity.js"></script>
+<script type="text/javascript" src="../../../files/js/commute_mode_graph.js"></script>
+<script type="text/javascript" src="../../../files/js/commute_distances.js"></script>
+<script type="text/javascript" src="../../../files/js/housing_type.js"></script>
+<script type="text/javascript" src="../../../files/js/landuse.js"></script>
+<script type="text/javascript" src="../../../files/js/airquality.js"></script>
+<script type="text/javascript" src="../../../files/js/trash.js"></script>
+
+	<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9126002-4']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+	</script>
+</head>
+<body>
+<div id="container">
+<div id="header">
+	<a id="top" href="../../../index.html"><img id="logo" src="../../../files/img/title.png" alt="BC Emissions" title="BC Emissions" /></a>
+	<div id="headercontent">
+	
+<h1>Fort St. James</h1>
+<h2>District Municipality in the Bulkley-Nechako Regional District</h2>
+
+	</div>
+</div>
+<div class="section" id="ie_warning">
+<p><strong>Sorry, BCEmissions.ca does not support Internet Explorer.</strong> Visualizations may not display correctly.</p>
+<p>For the best experience, please access this website using <a href="http://www.google.com/chrome" target="_blank">Chrome</a> or <a href="http://getfirefox.com" target="_blank">Firefox</a>.</p>
+</div>
+
+<div class="section" id="overview">
+<h2>Overview</h2>
+<div id="section_nav">
+<ul>
+<li><a href="index.html#heating_electricity">Heating and electricity</a></li>
+<li><a href="index.html#commute_mode">Commute mode</a></li>
+<li><a href="index.html#commute_distance">Commute distance</a></li>
+<li><a href="index.html#housing">Housing</a></li>
+<li><a href="index.html#landuse">Land use and greenspace</a></li>
+<li><a href="index.html#trash">Solid waste</a></li>
+<li><a href="index.html#airquality">Air quality</a></li>
+</ul>
+</div>
+
+<p>In 2009, the <strong>District Municipality of Fort St. James</strong> was ranked 
+<strong>120th</strong> in population among 
+<abbr title="Community Energy & Emissions Inventory Initiative">CEEI</abbr>-surveyed BC municipalities, 
+with <strong>1,322</strong> residents.</p>
+
+
+<br style="clear:both;" />
+</div>
+
+<div class="section" id="heating_electricity">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Heating and electricity</h2>
+<div class="available">
+<table style="font-size:0.8em;"><tr>
+<td><div class="legendbox"><div class="legendcolor" style="border-color:#00a95c;"></div></div>Residential</td>
+<td><div class="legendbox"><div class="legendcolor" style="border-color:#0070b9;"></div></div>Commercial<br/>Small or Medium Industrial</td>
+<td><div class="legendbox"><div class="legendcolor" style="border-color:#fcb316;"></div></div>Large Industrial</td>
+<td><div class="legendbox"><div class="legendcolor" style="border-color:#a6aea4;"></div></div>Wholesale</td></tr>
+</table>
+<table>
+<tr><th class="electricity">Electricity<div id="he_electricity_switch"></div></th><td><div id="electricity_canvas"></div></td></tr>
+<tr><th class="gas">Natural gas<div id="he_gas_switch"></div></th><td><div id="gas_canvas"></div></td></tr>
+<tr><th class="wood">Wood<div id="he_wood_switch"></div></th><td><div id="wood_canvas"></div></td></tr>
+<tr><th class="oil">Heating oil<div id="he_oil_switch"></div></th><td><div id="oil_canvas"></div></td></tr>
+<tr><th class="propane">Propane<div id="he_propane_switch"></div></th><td><div id="propane_canvas"></div></td></tr>
+</table>
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>How much CO<sub>2</sub> is emitted per kWh of electricity generated? Why is it so low? Why is it non-zero?</li>
+		<li>Where is natural gas unavailable? How does this change energy consumption patterns?</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+<div class="footnotes">
+	<ul>
+		<li>To protect the confidentiality of some industrial and commercial facilities, some data may be excluded. 
+		See Section 6 of the <a href="http://www.env.gov.bc.ca/cas/mitigation/ceei/CEEI_TechMethods_Guidance_final.pdf">2007 CEEI Technical Methods and Guidance Document</a> for details.</li>
+		<li>The 'wholesale' category represents electricity purchased by the municipality for resale to its own customers. It is not broken down into usage by sector.</li>
+		<li>Learn more: Read about how BC is aiming to reduce energy consumption while improving efficiency and security in the <a href="http://www.energyplan.gov.bc.ca/PDF/BC_Energy_Plan.pdf">BC Energy Plan</a>.</li>
+		<li>1 tonne = 1 megagram = 1000 kilograms.</li>
+		<li>According to <a href="http://nrcan.gc.ca/eneene/sources/natnat/infinf-eng.php">Natural Resources Canada</a>,
+		 one gigajoule is equivalent to about 26L of gasoline, 39L of propane, 277hWh of electricity, or 27m<sup>3</sup> of natural gas.</li>
+		<li>The average Canadian household uses 100GJ of energy per year to heat their home.</li>
+	</ul>
+</div>
+</div>
+<div class="unavailable"><p>Sorry, heating and electricity consumption information for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="commute_mode">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Commute mode</h2>
+<div class="available">
+<div id="commute_mode_box">
+<h2 class="commute_mode_year"></h2><h3 class="commute_mode_name"></h3>
+<br />
+<div class="desc"></div>
+</div>
+<div id="commute_mode_canvas"></div>
+<div><p>Transportation is a major source of greenhouse gas emissions and pollution. 
+Environmentally-friendly and sustainable commute options are coloured in lighter shades of green.</p></div>
+<div class="survey">
+	<h3>Where do you fit in?</h3>
+	<p>I commute to and from work or school by <select name="select_commute_mode" id="select_commute_mode">
+		<option value="none">...</option>
+		<option value="walk">walking</option>
+		<option value="bike">biking</option>
+		<option value="transit">riding public transit</option>
+		<option value="drive">driving</option>
+		<option value="carpool">riding in a carpool</option>
+		<option value="motorcycle">riding a motorcycle</option>
+		<option value="taxi">calling a taxi</option>
+	</select>.</p>
+		<div id="commute_mode_moreinfo">
+			<div id="commute_mode_moreinfo_walk">
+				<p>Great! You are doing your part to help reduce emissions in BC and the world.</p><p>Walking is good exercise, and environmentally friendly. Compared to driving a car, <strong>no carbon dioxide is generated.</strong></p>
+			</div>
+			<div id="commute_mode_moreinfo_bike">
+				<p>Great! You are doing your part to help reduce emissions in BC and the world.</p><p>Bicycling is good exercise, and environmentally friendly. Compared to driving a car, <strong>no carbon dioxide is generated</strong>.</p>
+			</div>
+			<div id="commute_mode_moreinfo_transit">
+				<p>Great! You are doing your part to help reduce emissions in BC and the world.</p><p>Taking public transit is a sensible and affordable way to get to work. For every kilometre travelled on public transit, about <strong>8 grams</strong> of carbon dioxide is generated.</p>
+			</div>
+			<div id="commute_mode_moreinfo_drive">
+				<p>For every kilometre travelled in a single-occupancy vehicle, about <strong>293 grams</strong> of carbon dioxide is produced. This amount varies significantly based on the efficiency of your vehicle.</p>
+				<p><strong>Visualize:</strong> 293 grams of carbon dioxide in the form of dry ice is enough to fill a 2 Litre pop bottle.</p>
+			</div>
+			<div id="commute_mode_moreinfo_carpool">
+				<p>Good! Carpooling helps reduce the number of cars on the road, and the amount of greenhouse gases generated. Assuming a full van with 6 passengers and 1 driver, each occupant will generate about <strong>43 grams</strong> of carbon dioxide.</p>
+				<p><strong>Visualize:</strong> 43 grams of carbon dioxide in the form of dry ice is about 6 teaspoons.</p>
+			</div>
+			<div id="commute_mode_moreinfo_motorcycle">
+				<p>A motorcycle produces fewer emissions than a car or van. For every kilometre travelled in a motorcycle, about <strong>119 grams</strong> of carbon dioxide is produced.</p>
+			</div>
+			<div id="commute_mode_moreinfo_taxi">
+				<p>Taxis can generate more carbon dioxide than a private single-occupancy vehicle, as the taxi carries a non-commuting driver, and must travel significant distances to reach each customer.</p>
+				
+				<p></p>
+			</div>
+			<div id="commute_mode_moreinfo_extra">
+			<ul class="footnotes">
+			<li>The density of solid carbon dioxide (dry ice) is approximately 1.4g/mL.</li>
+			<li>See also: <a href="http://www.env.gov.bc.ca/epd/bcairquality/topics/emissions-transportation-options.html">Air Pollution and Greenhouse Gases from Different Commuting Options</a>. BC Air Quality, Province of BC.</li>
+			</ul>
+			</div>
+		</div>
+</div>
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>Is Fort St. James trending towards greater use of environmentally-friendly commute options?</li>
+		<li>Transit usage increased significantly between between 2001 and 2006 in many municipalities across the province. Is Fort St. James one of them? How would you explain the increase?</li>
+		<li>In 2004, transportation comprised 39% of BC's total greenhouse gas emissions. Estimate how much of the 39% is from single-occupant vehicles.</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+<div class="footnotes">
+	<ul>
+		<li>These statistics are based on the primary commute mode between the home and workplace of each commuter. As a result, actual commute distances are greater.</li>
+		<li>Learn more: Your carbon footprint while walking or cycling is not strictly zero &mdash; it varies depending on your diet. Read the <a href="http://www.pacinst.org/topics/integrity_of_science/case_studies/driving_vs_walking.html">Pacific Institute's analysis</a> on this topic.</li>
+	</ul>
+</div>
+</div>
+<div class="unavailable"><p>Sorry, the commute mode data for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="commute_distance">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Commute distance</h2>
+<div class="available">
+<div id="commute_distance_map"></div>
+<table>
+<tr><th>Year</th><th>Commuters</th><th>&lt; 5km</th><th>5&ndash;10km</th><th>10&ndash;15km</th><th>15&ndash;25km</th><th>25km+</th></tr>
+
+<tr class="survey">
+	<td colspan="2" rowspan="2" style="padding:1em;text-align:left;">
+	<h3>Where do you fit in?</h3>
+	<p>Enter your home and workplace address to calculate your own commute distance.</p>
+	<input type="text" name="commute_from_field" id="commute_from_field" size="28" title="Home address" /><span id="commute_from_field_status"></span>
+	<input type="text" name="commute_to_field" id="commute_to_field" size="28" title="Work address" /><span id="commute_to_field_status"></span><br />
+	<div id="commute_status"></div>
+	</td>
+	<td class="button" id="survey_cd_lt5"> </td>
+	<td class="button" id="survey_cd_5to10"> </td>
+	<td class="button" id="survey_cd_10to15"> </td>
+	<td class="button" id="survey_cd_15to25"> </td>
+	<td class="button" id="survey_cd_gt25"> </td>
+	</tr>
+	<tr class="survey"><td colspan="5"><div id="distance_survey_desc"></div></td></tr>
+</table>
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>Look at the percentage of the commuting population within each commute distance bracket. Given Fort St. James's size, location, and geography, do you think the proportions make sense?</li>
+		<li>Would you call Fort St. James a commuter town? A suburb?</li>
+		<li>Calculate the number of Fort St. James residents who do not commute to work. 
+		Where may they commute to instead, and how far would their trips be? What are the 
+		demographics of this group, and how does this affect their share of emissions?</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+<div class="footnotes">
+	<ul>
+		<li>These statistics are based on the straight-line distance between the home and workplace of each commuter. As a result, actual commute distances are greater.</li>
+		<li>The median commute distance in BC is 6.5km.</li>
+		<li>Online tool: Explore ways to reduce your commute's carbon emissions - use the <a href="http://mytravel.mypassionforaction.net/mytravel/TransLink%20Travel%20Calculator.html">TransLink Travel Calculator</a>.</li>
+		<li>Learn more: <a href="http://www.bcstats.gov.bc.ca/pubs/es/ES2008-2.pdf">Going the Distance: Commuting Patterns in BC</a>. Environmental Statistics - June 2008, BC Stats.</li>
+	</ul>
+</div>
+</div>
+<div class="unavailable"><p>Sorry, the commute distance data for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="housing">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Housing</h2>
+<div class="available">
+<p>Number of households in each category of housing, by surveyed year:</p>
+<div id="housing_type_canvas"></div>
+<div style="margin:0 8px 0 16px;">
+<table><tr>
+	<th class="single">Single House</th><th class="semidetached">Semi Detached House</th>
+	<th class="rowhouse">Row House</th><th class="duplex">Duplex</th><th class="aptlt5">&lt; 5-storey<br/>Apartment</th>
+	<th class="aptgt5">&ge; 5-storey<br/>Apartment</th><th class="other">Other</th><th class="moveable">Movable</th></tr></table>
+</div>
+<br />
+<div class="survey">
+	<h3>Where do you fit in?</h3>
+	<form action="http://localhost:8000/go/district_municipality/Fort_St._James/?">
+		<p>I live in a <select name="select_housing_type" id="select_housing_type">
+			<option value="none">...</option>
+			<option value="single">single house (e.g.: Vancouver Special)</option>
+			<option value="attached">semi-detached house (house shares a wall with a neighbouring house)</option>
+			<option value="attached">row house (both side walls shared with neighbours)</option>
+			<option value="attached">duplex (ground and upper floors are separate units)</option>
+			<option value="aptlt5">&lt; 5-storey apartment</option>
+			<option value="aptge5">&ge; 5-storey apartment</option>
+			<option value="movable">movable home (e.g.: a trailer or boat)</option>
+		</select>.</p>
+	</form>
+	<div id="housing_type_moreinfo">
+		<div id="housing_type_moreinfo_single">
+			<p>Single detached homes are a very energy-inefficient form of housing. Much heat escapes through the exterior walls on all sides.</p>
+			<p>In 2007, <strong>947,000</strong> British Columbian households living in single detached homes consumed a total of <strong>128,325,573GJ</strong> of energy.</p>
+			<p>On average, <strong>0.60GJ</strong> of energy was spent on heating each metre of floor space, and <strong>117.9GJ</strong> per household.</p>
+			<p>Overall, BC apartments emitted <strong>2.9 megatons</strong> of CO<sub>2</sub>, excluding electricity. <strong>25.8 tonnes</strong> of CO<sub>2</sub> is produced per TJ of energy consumed.</p>
+			<p>Do your part to save money and reduce energy use in your home: <a href="http://www.livesmartbc.ca/">LiveSmart BC</a>
+			 and BC Hydro's <a href="http://www.bchydro.com/powersmart/">Power Smart</a> program can show you how.</p>
+		</div>
+		<div id="housing_type_moreinfo_attached">
+			<p>Semi-attached houses are more efficient than detached houses, as shared walls retain and redistribute heat.</p>
+			<p>Statistics combine semi-detached, row, and duplex homes into one reporting category. 
+			In 2007, <strong>185,000</strong> British Columbian households living in these homes consumed a total of <strong>21,991,910GJ</strong> of energy.</p>
+			<p>On average, <strong>0.87GJ</strong> of energy was spent on heating each metre of floor space, and <strong>86.4GJ</strong> per household.</p>
+			<p>Overall, BC apartments emitted <strong>400,000 kilotons</strong> of CO<sub>2</sub>, excluding electricity. <strong>25.8 tonnes</strong> of CO<sub>2</sub> are emitted per TJ of energy consumed.</p>
+		</div>
+		<div id="housing_type_moreinfo_aptlt5">
+			<p>Low-rise apartments are very energy-efficient, as shared walls retain and redistribute heat.</p>
+			<p>In 2007, British Columbians living in low-rise apartments consumed a total of <strong>10,587,982GJ</strong> of energy. <strong>543,000</strong> British Columbian households lived in an apartment.</p>
+			<p>On average, <strong>0.56GJ</strong> of energy was spent on heating each metre of floor space, and <strong>49.6GJ</strong> per household.</p>
+			<p>Overall, BC apartments emitted <strong>700,000 kilotons</strong> of CO<sub>2</sub>, excluding electricity. <strong>26.1 tonnes</strong> of CO<sub>2</sub> are emitted per TJ of energy consumed.</p>
+		</div>
+		<div id="housing_type_moreinfo_aptge5">
+			<p>High-rise apartments are very energy-efficient, as shared walls retain and redistribute heat.</p>
+			<p>In 2007, British Columbians living in high-rise apartments consumed a total of <strong>3,371,408GJ</strong> of energy. <strong>543,000</strong> British Columbian households lived in an apartment.</p>
+			<p>On average, <strong>0.56GJ</strong> of energy was spent on heating each metre of floor space, and <strong>49.6GJ</strong> per household.</p>
+			<p>Overall, BC apartments emitted <strong>700,000 kilotons</strong> of CO<sub>2</sub>, excluding electricity. <strong>26.1 tonnes</strong> of CO<sub>2</sub> are emitted per TJ of energy consumed.</p>
+		</div>
+		<div id="housing_type_moreinfo_movable">
+			<p>Mobile homes are a very energy-inefficient form of housing. Much heat escapes through the exterior walls on all sides, and insulation is often poor.</p>
+			<p>In 2007, <strong>66,000</strong> British Columbian households living in mobile homes consumed a total of <strong>3,994,588GJ</strong> of energy.</p>
+			<p>On average, <strong>0.87GJ</strong> of energy was spent on heating each metre of floor space, and <strong>86.4GJ</strong> per household.</p>
+			<p>Overall, BC apartments emitted <strong>200,000 kilotons</strong> of CO<sub>2</sub>, excluding electricity. <strong>27 tonnes</strong> of CO<sub>2</sub> are emitted per TJ of energy consumed.</p>
+		</div>
+	</div>
+</div>
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>Given Fort St. James's size and population, would it make sense to build more high-density housing?</li>
+		<li>Are Fort St. James residents trending towards higher density housing?</li>
+		<li>How does the age of your home play a role in its energy efficiency?</li>
+		<li>If you are in a recently-constructed home, does it meet any <a href="http://www.cagbc.org/">environmental building standards</a>, such as <a href="http://www.cagbc.org/leed/what/index.php">LEED</a>? What about your school or workplace?</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+<div class="footnotes">
+	<ul>
+		<li>See also: <a href="http://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/trends_res_bc.cfm?attr=0">BC Energy Use - Residential Sector</a>. Office of Energy Efficiency, Natural Resources Canada.</li>
+		<li>See also: <a href="http://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/data_e/sheu07/sheu_046_1.cfm?attr=0">Total energy consumption by households / region / type of dwelling</a>. Office of Energy Efficiency, Natural Resources Canada.</li>
+		<li>Online tool: Use BC Hydro's <a href="https://www.bchydro.com/youraccount/main/LoginPage.do?goto=https://www3a.bchydro.com:443/amh/home.asp">Analyze My Home</a> tool for a customized report on how to save energy in your home.</li>
+	</ul>
+</div>
+</div>
+<div class="unavailable"><p>Sorry, the housing data for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="landuse">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Land use and greenspace</h2>
+<div class="available">
+<div id="landuse_canvas"></div>
+<p>This graphic represents all the land under the jurisdiction of the District Municipality of Fort St. James.</p>
+<table>
+<tr><th colspan="2"></th><th colspan="2">Land area</th><th colspan="3">Parks and protected areas</th><th colspan="2"></th></tr>
+<tr><th>Year</th><th>Population</th><th>Total</th><th>Net</th><th>Federal</th><th>Provincial</th><th>Local</th><th><abbr title="Agricultural Land Reserve">ALR</abbr></th><th>Other</th></tr>
+<tr><td>2009</td><td>1,322</td><td>24.1km<sup>2</sup></td>
+<td>22.45km<sup>2</sup></td><td>-</td>
+<td>-</td>
+<td>0.07km<sup>2</sup></td><td>0.21km<sup>2</sup></td>
+<td>1.37km<sup>2</sup></td></tr>
+<tr><td></td><td>58.9/km<sup>2</sup></td><td colspan="2">169.8m<sup>2</sup>/person</td><td colspan="5"></td></tr>
+</table>
+<p>Higher density makes public transit more efficient and feasible to operate. 
+It also brings goods and services closer to residents, thereby reducing commutes. 
+Combined with the energy savings of increased housing density, these factors reduce emissions per capita.</p>
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>What may be comprising the land classified as 'other' in Fort St. James?</li>
+		<li>Below is a list of some of the densest cities in the world. How much would the population of 
+		Fort St. James need to increase in order to reach a similar population density? Alternatively, 
+		how little land must the current population of Fort St. James fit into in order to achieve a similar density? Imagine what life would be like in those conditions.<br />
+		<table><tr><th>City</th><th>World density rank</th><th>Population</th><th>Area (km<sup>2</sup>)</th><th>Density (/km<sup>2</sup>)</th></tr>
+		<tr><td>Manila, Philippines</td><td>1</td><td>1,660,714</td><td>38.55</td><td>43,079</td></tr>
+		<tr><td>Mumbai, India</td><td>20</td><td>13,830,884</td><td>603.0</td><td>22,937</td></tr>
+		<tr><td>Paris, France</td><td>30</td><td>2,203,817</td><td>105.4</td><td>20,909</td></tr>
+		<tr><td>Athens, Greece</td><td>36</td><td>745,514</td><td>38.96</td><td>19,135</td></tr>
+		<tr><td>Macau, China</td><td>42</td><td>542,200</td><td>29.2</td><td>18,568</td></tr>
+		<tr><td>Seoul, Korea</td><td>49</td><td>10,464,051</td><td>605.25</td><td>17,288</td></tr>
+		<tr><td>New York City, USA</td><td>-</td><td>8,391,881</td><td>789.0</td><td>10,636</td></tr>
+		</table>
+		</li>
+		<li>What are the pros and cons of increased population density?</li>
+		<li>How much parkland is there per capita?</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+<div class="footnotes">
+	<ul>
+		<li>Net land area = Total land area - (unsurveyed Crown land + federal, provincial, and local parks + Indian Reserves + ALR + bodies of water + waste disposal sites + airports). Net land area is used to calculate population density.</li>
+		<li>'ALR' stands for '<a href="http://www.alc.gov.bc.ca/alr/Establishing_the_ALR.htm">Agricultural Land Reserve</a>'. It is arable land set aside by the Province for the express purpose of agriculture.</li>
+	</ul>
+</div>
+</div>
+<div class="unavailable"><p>Sorry, land use and greenspace data for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="trash">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Solid waste</h2>
+<div class="available">
+<h3>2007</h3>
+<div id="trash_canvas"></div>
+<div class="trash">
+	<h3>Solid waste</h3>
+	<p><strong>1,872 tonnes</strong></p>
+	<ul>
+		<li>excludes demolition, land clearing, and construction waste</li>
+		<li>includes waste sent to landfills and incinerators only</li>
+	</ul>
+</div>
+<div class="co2e">
+	<h3>CO<sub>2</sub> from solid waste</h3>
+	<p><strong>1,703 tonnes</strong></p>
+	<ul>
+		<li>excludes CO<sub>2</sub> from decomposition and incineration of biogenic matter</li>
+		<li>includes methane (CH<sub>4</sub>) and nitrous oxide (N<sub>2</sub>O) converted to equivalent CO<sub>2</sub> mass</li>
+		
+	</ul>
+</div>
+<br />
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>In 2006, 96% of BC households had access to recycling programs. 99% of these households used at least one of them. Are you one of them?</li>
+		<li>Do you know how much trash you produce each week? How much of it can be composted or recycled? How much do you compost and recycle?</li>
+		<li>Do you know which landfill your trash goes to?</li>
+	</ul>
+</div>
+<div class="footnotes_bar">Footnotes</div>
+	<div class="footnotes">
+	<ul>
+		<li>In 2004, the average British Columbian produced 676kg of residential waste. The Canadian average was 791kg.</li>
+		<li>In 2004, 31% of non-hazardous waste was diverted from landfills by various recycling programs. The average British Columbian recycled 144kg of waste. The Canadian average was 112kg.</li>
+		<li>Convert methane to equivalent mass of CO<sub>2</sub>: CO<sub>2</sub> (t) = CH<sub>4</sub> (m<sup>3</sup>) &times; (0.6785kg CH<sub>4</sub>)/(m<sup>3</sup> CH<sub>4</sub>) &times; 21 &times; 10<sup>-3</sup>.</li>
+		<li>Solid waste CO<sub>2</sub>e estimates are highly uncertain. See Section 7 of the <a href="http://www.env.gov.bc.ca/cas/mitigation/ceei/CEEI_TechMethods_Guidance_final.pdf">2007 CEEI Technical Methods and Guidance Document</a> for methodology and details.</li>
+		<li>Learn more: <a href="http://www.bcstats.gov.bc.ca/pubs/es/ES2007-2.pdf">Recycling in BC</a>. Environmental Statistics - November 2007, BC Stats.</li>
+	</ul>
+	</div>
+</div>
+<div class="unavailable"><p>Sorry, trash output information for this region is unavailable.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="airquality">
+<h4 class="subject">District Municipality of Fort St. James</h4>
+<h2>Air quality</h2>
+<div class="available">
+<h3>Monitoring stations</h3>
+<div id="airquality_legend"></div>
+<h3>Ground-level ozone (O<sub>3</sub>)</h3>
+<div id="airquality_o3_canvas"></div>
+<div class="footnotes_bar2">What is ozone?</div>
+<div class="infobox">
+	<p>Ozone is a greenhouse gas. Ground-level ozone is formed primarily by sunlight reacting with carbon monoxide, hydrocarbon, and nitrogen oxide pollution. 
+	The layer of ozone in the stratosphere is produced by UV light reacting with oxygen in the air, which in turn prevents most UV radiation
+	 from reaching the surface of the earth. However, ozone at ground-level is not beneficial.</p>
+	<p>Increased concentrations of ground-level ozone is harmful to both human health and the environment. 
+	It traps heat, and is the primary component of smog.</p>
+	<p>The World Health Organization's guideline threshold for 8-hour mean ozone is 100&micro;g/m<sup>3</sup>, or <strong>51ppb</strong>. The Canadian annual mean maximum is <strong>46ppb</strong>.
+	The world's background ozone level is approximately 28ppb. Ozone levels lower than this concentration are caused by further reactions with pollutants.</p>
+	<div class="footnotes2">
+	<ul>
+		<li>Learn more: <a href="http://www.hc-sc.gc.ca/ewh-semt/pubs/air/naaqo-onqaa/ground_level_ozone_tropospherique/summary-sommaire/enivironment-levels-niveaux-eng.php">National Ambient Air Quality Objectives For Ground-Level Ozone</a>. Health Canada.</li>
+		<li>See also: <a href="http://www.env.gov.bc.ca/epd/bcairquality/101/ozone-depletion-intro.html">Ozone Depletion: An Introduction</a>. BC Air Quality, Province of BC.</li>
+	</ul>
+	</div>
+</div>
+<br /><br />
+<h3>Fine particulate matter (PM<sub>2.5</sub>)</h3>
+<div id="airquality_pm_canvas"></div>
+<div class="footnotes_bar2">What is particulate matter?</div>
+<div class="infobox">
+	<p>This is a measure of the concentration of solid or liquid particles suspended in the air. PM<sub>2.5</sub> means particles less than 2.5&micro;m in diameter. These particulates are produced by burning wood and fossil fuels.</p>
+	<p>Particulates of this size cause serious health problems, as they remain in the deep in the lungs after being inhaled.</p>
+	<p>The World Health Organization's guideline threshold for annual mean PM<sub>2.5</sub> is <strong>10&micro;g/m<sup>3</sup></strong>. BC's objective threshold is <strong>8&micro;g/m<sup>3</sup></strong>.</p>
+</div>
+
+<div class="footnotes_bar">Think about it</div>
+<div class="footnotes">
+	<ul>
+		<li>Do the ozone and PM<sub>2.5</sub> graphs have any big spikes? If so, in what year did they occur? How would you explain those changes?</li>
+		
+		
+	</ul>
+</div>
+	<div class="footnotes_bar">Footnotes</div>
+	<div class="footnotes">
+	<ul>
+		<li>Learn more: <a href="http://www.env.gov.bc.ca/epd/bcairquality/health/index.html">Air Quality and Your Health</a>. BC Air Quality, Province of BC.</li>
+		<li>Learn more: <a href="http://www.env.gov.bc.ca/epd/bcairquality/topics/vehicle-emissions-impacts.html">How Vehicle Emissions Affect Us</a>. BC Air Quality, Province of BC.</li>
+		<li>See also: <a href="http://www.who.int/phe/health_topics/outdoorair_aqg/en/index.html">Air quality guidelines for particulate matter, ozone, nitrogen dioxide and sulfur dioxide, 2005</a>. World Health Organization.</li>
+		<li>See also: <a href="http://www.ccme.ca/assets/pdf/pmozone_standard_e.pdf">Canada-Wide Standards for Particulate Matter and Ozone</a>. Canadian Council of Ministers of the Environment.</li>
+		<li>See also: <a href="http://www.env.gov.bc.ca/epd/bcairquality/reports/pdfs/aqotable.pdf">Air Quality Objectives and Standards for British Columbia and Canada</a>. Ministry of Environment, Province of BC.</li>
+	</ul>
+	</div>
+</div>
+<div class="unavailable"><p>Sorry, air quality data for this region is unavailable. Air quality data is only available for a select number of municipalities.</p></div>
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+<div class="section" id="data_sources">
+<h2>Data sources</h2>
+<ul>
+<li><a href="http://www.env.gov.bc.ca/cas/mitigation/ceei/reports.html">2007 Community Energy and Emissions Inventory Reports</a> and <a href="http://www.env.gov.bc.ca/cas/mitigation/ceei/CEEI_TechMethods_Guidance_final.pdf">Technical Methods and Guidance Document</a>. 
+	Community Energy &amp; Emissions Inventory Initiative, Ministry of Environment, Province of BC.</li>
+	<li><a href="http://www12.statcan.ca/census-recensement/2006/dp-pd/prof/92-591/search-recherche/lst/page.cfm?Lang=E&amp;GeoCode=59">2006 Community Profiles for British Columbia</a>. 2006 Census, Statistics Canada.</li>
+<li><a href="http://www.bcstats.gov.bc.ca/data/pop/pop/estspop.asp">2006&ndash;2009 Population Estimates</a>. BC Stats, Province of BC.</li>
+<li><a href="http://mytravel.mypassionforaction.net/mytravel/TransLink%20Travel%20Calculator.html">TransLink Travel Calculator</a>, TransLink.</li>
+<li><a href="http://www.bcstats.gov.bc.ca/pubs/es/ES2008-2.pdf">Going the Distance: Commuting Patterns in BC</a>. Environmental Statistics - June 2008, BC Stats.</li>
+<li><a href="http://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/trends_res_bc.cfm?attr=0">BC Energy Use - Residential Sector</a>. Office of Energy Efficiency, Natural Resources Canada.</li>
+<li><a href="http://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/data_e/sheu07/sheu_046_1.cfm?attr=0">Total energy consumption by type of dwelling</a>. Office of Energy Efficiency, Natural Resources Canada.</li>
+<li><a href="http://www.bcstats.gov.bc.ca/pubs/es/ES2007-2.pdf">Recycling in BC</a>. Environmental Statistics - November 2007, BC Stats.</li>
+<li><a href="http://maps-cartes.ec.gc.ca/indicators-indicateurs/airTable.aspx">Ozone and Fine Particulate Concentrations at Monitoring Stations</a>. Environment Canada.</li>
+<li><a href="http://www.env.gov.bc.ca/epd/bcairquality/">BC Air Quality</a>, Ministry of Environment, Province of BC.</li>
+<li><a href="http://www.hc-sc.gc.ca/ewh-semt/pubs/air/naaqo-onqaa/ground_level_ozone_tropospherique/summary-sommaire/enivironment-levels-niveaux-eng.php">National Ambient Air Quality Objectives For Ground-Level Ozone</a>. Health Canada.</li>
+<li><a href="http://www.ccme.ca/assets/pdf/pmozone_standard_e.pdf">Canada-Wide Standards for Particulate Matter and Ozone</a>. Canadian Council of Ministers of the Environment.</li>
+<li><a href="http://www.who.int/phe/health_topics/outdoorair_aqg/en/index.html">Air quality guidelines for particulate matter, ozone, nitrogen dioxide and sulfur dioxide, 2005</a>. World Health Organization.</li>
+</ul>
+<img src="../../../files/img/surveyarrowbg.png" style="width:1px;height:1px;" />
+<div class="footer"><a href="index.html#top"><img src="../../../files/img/top.png" alt="back to top" title="back to top" /></a></div>
+</div>
+
+
+<div id="footer" class="section">
+<div id="aboutlink"><a href="../../../about/index.html">About the site</a></div>
+<div class="for">Created for the BC Apps 4 Climate Action Contest.</div>
+<div class="byline">a project by <a href="http://www.carsonlam.ca">Carson Lam</a></div>
+</div>
+</div>
+<div id="bottom">&nbsp;</div>
+</body>
+</html>
